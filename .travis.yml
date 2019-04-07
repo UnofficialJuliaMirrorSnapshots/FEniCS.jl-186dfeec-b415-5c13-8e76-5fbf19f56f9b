@@ -1,0 +1,28 @@
+# Documentation: http://docs.travis-ci.com/user/languages/julia/
+language: julia
+os:
+  - linux
+julia:
+  - 1.0
+
+dist: trusty
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - echo "**** pulling Docker image"
+  - docker pull ysimillides/fenics-julia-docker:v1.0
+  - chmod +x travis_docker_test_script.sh
+notifications:
+  email: false
+script:
+  - echo "**** running Docker"
+  - docker run --env-file travis_docker_env.list -t -a STDOUT -a STDIN -a STDERR -v $PWD:/mnt ysimillides/fenics-julia-docker:v1.0 /mnt/travis_docker_test_script.sh $TRAVIS_JULIA_VERSION
+after_success:
+  # push coverage results to Coveralls, .cov files were copied back by script above
+  - echo "**** submitting coverage information"
+  - julia -e 'Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia -e 'Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
