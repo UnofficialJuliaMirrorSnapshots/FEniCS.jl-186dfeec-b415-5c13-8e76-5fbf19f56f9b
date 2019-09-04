@@ -49,7 +49,7 @@ v = TestFunction(V)
 f = Constant(-6.0)
 a = dot(grad(u),grad(v))*dx
 L = f*v*dx
-U = FEniCS.Function(V)
+U = FeFunction(V)
 lvsolve(a,L,U,bc1) #linear variational solver
 errornorm(u_D, U, norm="L2")
 get_array(L) #this returns an array for the stiffness matrix
@@ -61,6 +61,7 @@ vtkfile << U.pyobject #exports the solution to a vtkfile
 We can also plot the solution (this relies on FEniCS backend for plotting) or import it from our file into Paraview:
 
 ```julia
+import PyPlot # plotting won't work if PyPlot is not imported
 FEniCS.Plot(U)
 FEniCS.Plot(mesh)
 
