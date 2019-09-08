@@ -1,6 +1,6 @@
 name = "FEniCS"
 uuid = "186dfeec-b415-5c13-8e76-5fbf19f56f9b"
-version = "0.3.0"
+version = "0.3.2"
 
 [deps]
 ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
@@ -9,3 +9,10 @@ Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 
 [compat]
 julia = "1"
+PyCall = "1.90"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

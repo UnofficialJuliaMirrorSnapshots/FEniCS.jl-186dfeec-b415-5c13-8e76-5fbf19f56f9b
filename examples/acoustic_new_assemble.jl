@@ -1,7 +1,5 @@
+module AcousticNewAssemble
 using FEniCS
-using PyCall
-
-@pyimport fenics
 
 c = 5000
 #problem variables
@@ -23,7 +21,7 @@ v = TestFunction(V)
 a = u*v*dx + dt*dt*c*c*inner(grad(u), grad(v))*dx
 L = 2*u1*v*dx-u0*v*dx
 
-delta = Expression(fenics.Expression("sin(c*10*t)",degree=2,c=c,t=t))
+delta = Expression("sin(c*10*t)",degree=2,c=c,t=t)
 
 #Define boundary conditions
 top ="on_boundary && near(x[1], 2)"
@@ -45,11 +43,10 @@ bcs_neu = [BCL,BCD,BCT]
 u=FeFunction(V)
 
 while t <= T
-    delta.pyobject[:t] = t
+    delta.pyobject.t = t
     lvsolve(a,L,u,bcs_dir) #linear variational solver
     assign(u0,u1)
     assign(u1,u)
     global t +=dt
 end
-println("Acoustic problem finished")
-true
+end#module

@@ -49,6 +49,10 @@ export Constant
 FeFunction(V::FunctionSpace) = FeFunction(fenics.Function(V.pyobject))
 assign(solution1::FeFunction,solution2 )=fenicspycall(solution1,:assign,solution2.pyobject)
 
+function assign(solution::FeFunction, data::AbstractArray)
+    solution.pyobject.vector().set_local(data)
+end
+
 geometric_dimension(expr::Union{FeFunction,Expression}) = fenicspycall(expr, :geometric_dimension)
 export geometric_dimension
 
@@ -66,12 +70,9 @@ end
 
 export FeFunction,assign,split,py_split
 
-
-
-
-
-Expression(cppcode::String;element=nothing, cell=nothing, domain=nothing, degree=nothing, name=nothing, label=nothing) = Expression(fenics.Expression(cppcode,
-element=element,cell=cell, domain=domain, degree=degree, name=name, label=label))
+function Expression(cppcode; kw...)
+    Expression(fenics.Expression(cppcode; kw...))
+end
 Identity(dim::Int) = Expression(fenics.Identity(dim))
 inner(u::Union{Expression,FeFunction}, v::Union{Expression,FeFunction}) = Expression(fenics.inner(u.pyobject, v.pyobject))
 outer(u::Union{Expression,FeFunction}, v::Union{Expression,FeFunction}) = Expression(fenics.outer(u.pyobject, v.pyobject))
@@ -254,7 +255,7 @@ Deprecate this in a future version
 Plot(in_plot::Union{Mesh,FunctionSpace,FeFunction};alpha=1,animated=false,antialiased=true,color="grey"
 ,dash_capstyle="butt",dash_joinstyle="miter",dashes="",drawstyle="default",fillstyle="full",label="s",linestyle="solid",linewidth=1
 ,marker="",markeredgecolor="grey",markeredgewidth="",markerfacecolor="grey"
-,markerfacecoloralt="grey",markersize=1,markevery="none",visible=true,title="") =fenics.common[:plotting][:plot](in_plot.pyobject,
+,markerfacecoloralt="grey",markersize=1,markevery="none",visible=true,title="") =fenics.common.plotting.plot(in_plot.pyobject,
 alpha=alpha,animated=animated,antialiased=antialiased,color=color,dash_capstyle=dash_capstyle,dash_joinstyle=dash_joinstyle
 ,dashes=dashes,drawstyle=drawstyle,fillstyle=fillstyle,label=label,linestyle=linestyle,linewidth=linewidth,marker=marker,markeredgecolor=markeredgecolor
 ,markeredgewidth=markeredgewidth,markerfacecolor=markerfacecolor,markerfacecoloralt=markerfacecoloralt,markersize=markersize,markevery=markevery

@@ -1,20 +1,15 @@
-#
-#FEniCS tutorial demo program: Convection-diffusion-reaction for a system
-#describing the concentration of three species A, B, C undergoing a simple
-#first-order reaction A + B --> C with first-order decay of C. The velocity
-#is given by the flow field w from the demo navier_stokes_cylinder.py.
-#  u_1' + w . nabla(u_1) - div(eps*grad(u_1)) = f_1 - K*u_1*u_2
-#  u_2' + w . nabla(u_2) - div(eps*grad(u_2)) = f_2 - K*u_1*u_2
-#  u_3' + w . nabla(u_3) - div(eps*grad(u_3)) = f_3 + K*u_1*u_2 - K*u_3
-#"""
-
+"""
+FEniCS tutorial demo program: Convection-diffusion-reaction for a system
+describing the concentration of three species A, B, C undergoing a simple
+first-order reaction A + B --> C with first-order decay of C. The velocity
+is given by the flow field w from the demo navier_stokes_cylinder.py.
+  u_1' + w . nabla(u_1) - div(eps*grad(u_1)) = f_1 - K*u_1*u_2
+  u_2' + w . nabla(u_2) - div(eps*grad(u_2)) = f_2 - K*u_1*u_2
+  u_3' + w . nabla(u_3) - div(eps*grad(u_3)) = f_3 + K*u_1*u_2 - K*u_3
+"""
+module Tutorial9
 
 using FEniCS
-using PyCall
-
-
-@pyimport fenics
-
 
 T = 0.05            # final time
 num_steps = 10    # number of time steps
@@ -88,7 +83,7 @@ for n=0:num_steps
 
     # Save solution to file (VTK)
     _u_1, _u_2, _u_3 = py_split(u)
-    #_u_1, _u_2, _u_3 = u.pyobject[:split]()
+    #_u_1, _u_2, _u_3 = u.pyobject.split()
 
 
     File("reaction_system/u_1.pvd",_u_1,t)
@@ -97,6 +92,4 @@ for n=0:num_steps
     # Update previous solution
     assign(u_n,u)
 end
-print("Tutorial 9 finished")
-
-true
+end#module

@@ -1,7 +1,6 @@
+module Acoustic
 using FEniCS
-using PyCall
 
-@pyimport fenics
 c = 5000
 #problem variables, have been scaled down for faster test solution
 dt = 0.00004;
@@ -22,7 +21,7 @@ v = TestFunction(V)
 a = u*v*dx + dt*dt*c*c*inner(grad(u), grad(v))*dx
 L = 2*u1*v*dx-u0*v*dx
 
-delta = Expression(fenics.Expression("sin(c*10*t)",degree=2,c=c,t=t))
+delta = Expression("sin(c*10*t)",degree=2,c=c,t=t)
 
 #Define boundary conditions
 top ="on_boundary && near(x[1], 2)"
@@ -46,7 +45,7 @@ u=FeFunction(V)
 
 while t <= T
     A, b = assemble_system(a, L, bcs)
-    delta.pyobject[:t] = t
+    delta.pyobject.t = t
     [apply(bcc,b) for bcc in bcs]
     solve(A, vector(u), b)
     assign(u0,u1)
@@ -55,5 +54,4 @@ while t <= T
     #fenics.plot(u.pyobject,title="Acoustic wave Equation")#,mode="auto")
 
 end
-println("Acoustic problem finished")
-true
+end#module
