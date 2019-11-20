@@ -36,6 +36,8 @@ function __init__()
     global tetrahedron = fenics.tetrahedron
     global hexahedron = fenics.hexahedron #matplotlib cannot handle hexahedron elements
     global triangle = fenics.triangle
+    global quadrilateral = fenics.quadrilateral
+    global CellType = fenics.CellType
 end
 #the below code is an adaptation of aleadev.FEniCS.jl
 import Base: size, length, show, *, +, -,/, repr, div, sqrt,split,write
@@ -74,7 +76,7 @@ set_log_level(lvl::Int) = fenics.set_log_level(lvl)
 
 str(obj::fenicsobject) = fenicspycall(obj, :__str__)
 repr(obj::fenicsobject) = fenicspycall(obj, :__repr__)
-show(io::IO, obj::fenicsobject) = show(io, str(obj))
+show(io::IO, obj::fenicsobject) = show(io, repr(obj))
 Docs.getdoc(obj::fenicsobject) = obj.pyobject.__doc__
 export str, repr
 
